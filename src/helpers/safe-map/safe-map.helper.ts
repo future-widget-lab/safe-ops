@@ -1,3 +1,5 @@
+import type { OnError } from '../../types/errors.type';
+
 /**
  * @description
  * Use this helper to safely transform a collection without worrying about runtime errors.
@@ -7,19 +9,23 @@
 export const safeMap = <TInput, TOutput>(
 	collection: Array<TInput>,
 	transformer: (item: TInput, index: number, array: Array<TInput>) => TOutput,
-	options?: {
-		onError?: (error: unknown, item: TInput, index: number) => void;
-	}
+	options: {
+		onError?: OnError<TInput>;
+	} = {}
 ): Array<TOutput> => {
-	const { onError = () => {} } = options ?? {};
+	const { onError } = options;
 
-	return collection.reduce<Array<TOutput>>((accumulated, item, index, array) => {
+	const results: Array<TOutput> = [];
+
+	for (let index = 0; index < collection.length; index++) {
+		const item = collection[index];
+
 		try {
-			accumulated.push(transformer(item, index, array));
+			results.push(transformer(item, index, collection));
 		} catch (error) {
-			onError(error, item, index);
+			onError?.(error, item, index);
 		}
+	}
 
-		return accumulated;
-	}, []);
+	return results;
 };
