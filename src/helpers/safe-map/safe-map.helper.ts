@@ -1,4 +1,5 @@
 import type { OnError } from '../../types/errors.type';
+import type { Transformer } from '../../types/map.type';
 
 /**
  * @description
@@ -8,7 +9,7 @@ import type { OnError } from '../../types/errors.type';
  */
 export const safeMap = <TInput, TOutput>(
 	collection: Array<TInput>,
-	transformer: (item: TInput, index: number, array: Array<TInput>) => TOutput,
+	transformer: Transformer<TInput, TOutput>,
 	options: {
 		onError?: OnError<TInput>;
 	} = {}

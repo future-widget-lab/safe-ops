@@ -1,4 +1,5 @@
 import type { ErrorReport, OnError } from '../../types/errors.type';
+import type { Predicate } from '../../types/find.type';
 
 /**
  * @description
@@ -10,7 +11,7 @@ import type { ErrorReport, OnError } from '../../types/errors.type';
  */
 export const safeFindWithErrors = <TInput>(
 	collection: Array<TInput>,
-	predicate: (item: TInput, index: number, array: Array<TInput>) => boolean,
+	predicate: Predicate<TInput>,
 	options: {
 		onError?: OnError<TInput>;
 	} = {}
