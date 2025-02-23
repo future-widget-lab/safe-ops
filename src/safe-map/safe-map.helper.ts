@@ -1,6 +1,7 @@
 /**
  * @description
  * Use this helper to safely transform a collection without worrying about runtime errors.
+ *
  * If an error occurs during transformation, the item is skipped.
  */
 export const safeMap = <TInput, TOutput>(
