@@ -1,11 +1,16 @@
 {
-  "name": "safe-ops",
+  "name": "@future-widget-lab/safe-ops",
   "version": "0.1.0",
+  "description": "A set of helper functions for performing operations safely, preventing runtime errors from disrupting your application.",
   "license": "MIT",
   "author": "Carlos Lobo",
   "main": "dist/index.js",
   "module": "dist/safe-ops.esm.js",
   "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/future-widget-lab/safe-ops.git"
+  },
   "files": [
     "dist",
     "src"
@@ -25,10 +30,18 @@
     }
   },
   "prettier": {
-    "printWidth": 80,
-    "semi": true,
+    "singleAttributePerLine": true,
+    "bracketSpacing": true,
+    "useTabs": true,
     "singleQuote": true,
-    "trailingComma": "es5"
+    "semi": true,
+    "printWidth": 120,
+    "tabWidth": 2,
+    "importOrderSeparation": false,
+    "importOrderSortSpecifiers": true,
+    "importOrderCaseInsensitive": true,
+    "pluginSearchDirs": false,
+    "trailingComma": "none"
   },
   "jest": {
     "testEnvironment": "jsdom"
@@ -48,5 +61,33 @@
       "path": "dist/safe-ops.esm.js",
       "limit": "10 KB"
     }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "@tsconfig/recommended": "^1.0.8",
+    "@tsconfig/vite-react": "^3.4.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "dts-cli": "^2.0.5",
+    "husky": "^9.1.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "size-limit": "^11.2.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.3"
+  },
+  "keywords": [
+    "safe",
+    "utility",
+    "helpers",
+    "error-handling",
+    "safe-ops",
+    "array-methods",
+    "defensive-programming",
+    "runtime-safety",
+    "resilient-code",
+    "try-catch",
+    "typescript",
+    "javascript"
   ]
 }
