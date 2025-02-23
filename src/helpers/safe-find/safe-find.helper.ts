@@ -14,14 +14,16 @@ export const safeFind = <TInput>(
 	const { onError = () => {} } = options;
 
 	for (let index = 0; index < collection.length; index++) {
+		const item = collection[index];
+
 		try {
-			const matches = predicate(collection[index], index, collection);
+			const matches = predicate(item, index, collection);
 
 			if (matches) {
-				return collection[index];
+				return item;
 			}
 		} catch (error) {
-			onError(error, collection[index], index);
+			onError(error, item, index);
 		}
 	}
 

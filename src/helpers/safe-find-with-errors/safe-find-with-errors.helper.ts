@@ -23,10 +23,10 @@ export const safeFindWithErrors = <TInput>(
 		const item = collection[index];
 
 		try {
-			const matches = predicate(collection[index], index, collection);
+			const matches = predicate(item, index, collection);
 
 			if (matches) {
-				return { found: collection[index], errors };
+				return { found: item, errors };
 			}
 		} catch (error) {
 			errors.push({ error: error as Error, item, index });
