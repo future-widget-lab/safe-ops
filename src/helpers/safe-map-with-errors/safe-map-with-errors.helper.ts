@@ -3,9 +3,17 @@ import type { Transformer } from '../../types/map.type';
 
 /**
  * @description
- * Use this helper to safely transform a collection while capturing both successful results and errors.
+ * Use this helper to transform an array of items into a new array of items.
  *
- * This ensures you have full visibility into what went wrong during transformation.
+ * This function behaves similarly to `Array.prototype.map`, but with added error handling:
+ * - If the transformer throws an error for any element, the error is handled via the onError callback.
+ * - Allows for custom error handling through the onError option.
+ *
+ * @param {Array<TInput>} collection The array of items to transform.
+ * @param {Transformer<TInput>} transformer The function that transforms the items. Called once for each item in the array.
+ * @param {{ onError?: OnError<TInput> }} options An optional object for error handling.
+ *
+ * @returns {{ results: Array<TOutput>; errors: Array<ErrorReport<TInput>> }} A report which contains the array of items that match the predicate and the errors that occurred.
  */
 export const safeMapWithErrors = <TInput, TOutput>(
 	collection: Array<TInput>,
@@ -13,7 +21,7 @@ export const safeMapWithErrors = <TInput, TOutput>(
 	options: {
 		onError?: OnError<TInput>;
 	} = {}
-): { results: Array<TOutput>; errors: Array<{ error: unknown; item: TInput; index: number }> } => {
+): { results: Array<TOutput>; errors: Array<ErrorReport<TInput>> } => {
 	const { onError } = options;
 
 	const results: Array<TOutput> = [];

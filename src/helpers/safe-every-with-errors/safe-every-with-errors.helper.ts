@@ -3,12 +3,18 @@ import type { Predicate } from '../../types/find.type';
 
 /**
  * @description
- * Use this helper to safely check if all elements in an array satisfy a predicate function.
+ * Use this helper determine whether all the members of an array satisfy the specified test.
  *
- * Similar to Array.prototype.every(), but with error handling:
- * - If the predicate throws an error for any element, returns false
- * - Collects any errors that occur during execution
- * - Allows custom error handling via onError callback
+ * This function behaves similarly to `Array.prototype.every`, but with added error handling:
+ * - If the predicate throws an error for any element, the error is handled via the onError callback.
+ * - Collects errors in an array and returns it in the report.
+ * - Allows for custom error handling through the onError option.
+ *
+ * @param {Array<TInput>} collection The array of items to test.
+ * @param {Predicate<TInput>} predicate A function that tests each element of the array. Called once for each item in the array.
+ * @param {{ onError?: OnError<TInput> }} options An optional object for error handling.
+ *
+ * @returns {{ result: boolean; errors: Array<ErrorReport<TInput>> }} A report which contains the result of the test and the errors that occurred.
  */
 export const safeEveryWithErrors = <TInput>(
 	collection: Array<TInput>,
