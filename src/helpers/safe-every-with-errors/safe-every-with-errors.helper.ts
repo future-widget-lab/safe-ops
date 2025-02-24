@@ -1,4 +1,4 @@
-import type { OnError } from '../../types/errors.type';
+import type { ErrorReport, OnError } from '../../types/errors.type';
 import type { Predicate } from '../../types/find.type';
 
 /**
@@ -7,16 +7,18 @@ import type { Predicate } from '../../types/find.type';
  *
  * Similar to Array.prototype.every(), but with error handling:
  * - If the predicate throws an error for any element, returns false
+ * - Collects any errors that occur during execution
  * - Allows custom error handling via onError callback
  */
-export const safeEvery = <TInput>(
+export const safeEveryWithErrors = <TInput>(
 	collection: Array<TInput>,
 	predicate: Predicate<TInput>,
 	options: {
 		onError?: OnError<TInput>;
 	} = {}
-): boolean => {
+): { result: boolean; errors: Array<ErrorReport<TInput>> } => {
 	const { onError = () => {} } = options;
+	const errors: Array<ErrorReport<TInput>> = [];
 
 	for (let index = 0; index < collection.length; index++) {
 		const item = collection[index];
@@ -25,14 +27,16 @@ export const safeEvery = <TInput>(
 			const matches = predicate(item, index, collection);
 
 			if (!matches) {
-				return false;
+				return { result: false, errors };
 			}
 		} catch (error) {
+			errors.push({ error: error as Error, item, index });
+
 			onError(error, item, index);
 
-			return false;
+			return { result: false, errors };
 		}
 	}
 
-	return true;
+	return { result: true, errors };
 };
