@@ -1,11 +1,10 @@
-import type { ErrorReport, OnError } from '../../types/errors.type';
+import type { OnError } from '../../types/errors.type';
 import type { Reducer } from '../../types/reduce.type';
 
 /**
  * @description
  * Use this helper to create an accumulated result given an array and an initial value.
  * - If the reducer throws an error for any element, the error is handled via the onError callback.
- * - Collects errors in an array and returns it in the report.
  * - Allows for custom error handling through the onError option.
  *
  * @param {Array<TInput>} collection The array to reduce.
@@ -13,20 +12,19 @@ import type { Reducer } from '../../types/reduce.type';
  * @param {TOutput} initialValue The initial value for the accumulator.
  * @param {{ onError?: OnError<TInput> }} options Optional error handling configuration.
  *
- * @returns {{ result: TOutput; errors: Array<ErrorReport<TInput>> }} An object containing the accumulated result and any errors encountered.
+ * @returns {TOutput} The accumulated result.
  */
-export const safeReduceWithErrors = <TInput, TOutput>(
+export const safeReduce = <TInput, TOutput>(
 	collection: Array<TInput>,
 	reducer: Reducer<TInput, TOutput>,
 	initialValue: TOutput,
 	options: {
 		onError?: OnError<TInput>;
 	} = {}
-): { result: TOutput; errors: Array<ErrorReport<TInput>> } => {
+): TOutput => {
 	const { onError = () => {} } = options;
 
 	let accumulator = initialValue;
-	const errors: Array<ErrorReport<TInput>> = [];
 
 	for (let index = 0; index < collection.length; index++) {
 		const item = collection[index];
@@ -34,11 +32,9 @@ export const safeReduceWithErrors = <TInput, TOutput>(
 		try {
 			accumulator = reducer(accumulator, item, index, collection);
 		} catch (error) {
-			errors.push({ error: error as Error, item, index });
-
 			onError(error, item, index);
 		}
 	}
 
-	return { result: accumulator, errors };
+	return accumulator;
 };
