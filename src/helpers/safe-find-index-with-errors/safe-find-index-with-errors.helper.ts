@@ -1,4 +1,4 @@
-import type { OnError } from '../../types/errors.type';
+import type { ErrorReport, OnError } from '../../types/errors.type';
 import type { Predicate } from '../../types/find.type';
 
 /**
@@ -7,22 +7,24 @@ import type { Predicate } from '../../types/find.type';
  *
  * This function behaves similarly to `Array.prototype.findIndex`, but with added error handling:
  * - If the predicate throws an error for any element, the error is handled via the onError callback.
+ * - Collects errors in an array and returns it in the report.
  * - Allows for custom error handling through the onError option.
  *
  * @param {Array<TInput>} collection The array of items to test.
  * @param {Predicate<TInput>} predicate A function that tests each element of the array. Called once for each item in the array.
  * @param {{ onError?: OnError<TInput> }} options An optional object for error handling.
  *
- * @returns {number} The index of the first element that satisfies the test. Returns -1 if no element matches.
+ * @returns {{ index: number; errors: Array<ErrorReport<TInput>> }} The found index or -1 if not found, along with collected errors.
  */
-export const safeFindIndex = <TInput>(
+export const safeFindIndexWithErrors = <TInput>(
 	collection: Array<TInput>,
 	predicate: Predicate<TInput>,
 	options: {
 		onError?: OnError<TInput>;
 	} = {}
-): number => {
+): { index: number; errors: Array<ErrorReport<TInput>> } => {
 	const { onError = () => {} } = options;
+	const errors: Array<ErrorReport<TInput>> = [];
 
 	for (let index = 0; index < collection.length; index++) {
 		const item = collection[index];
@@ -31,12 +33,14 @@ export const safeFindIndex = <TInput>(
 			const matches = predicate(item, index, collection);
 
 			if (matches) {
-				return index;
+				return { index, errors };
 			}
 		} catch (error) {
+			errors.push({ error: error as Error, item, index });
+
 			onError(error, item, index);
 		}
 	}
 
-	return -1;
+	return { index: -1, errors };
 };
