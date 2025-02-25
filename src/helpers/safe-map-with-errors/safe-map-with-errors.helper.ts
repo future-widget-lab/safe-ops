@@ -7,6 +7,7 @@ import type { Transformer } from '../../types/map.type';
  *
  * This function behaves similarly to `Array.prototype.map`, but with added error handling:
  * - If the transformer throws an error for any element, the error is handled via the onError callback.
+ * - Collects errors in an array and returns it in the report.
  * - Allows for custom error handling through the onError option.
  *
  * @param {Array<TInput>} collection The array of items to transform.
