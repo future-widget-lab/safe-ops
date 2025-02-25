@@ -38,5 +38,3 @@ export const safeMap = <TInput, TOutput>(
 
 	return results;
 };
-
-Array.prototype.map;

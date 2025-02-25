@@ -42,5 +42,3 @@ export const safeFilter = <TInput>(
 
 	return results;
 };
-
-Array.prototype.filter;

@@ -42,5 +42,3 @@ export const safeEvery = <TInput>(
 
 	return true;
 };
-
-Array.prototype.every;
