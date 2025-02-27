@@ -1,160 +1,203 @@
-# DTS React User Guide
+# @future-widget-lab/safe-ops
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with DTS. Let’s get you oriented with what’s here and how to use it.
+A collection of helper functions that ensure operations never fail, even if an error occurs within a callback function. These helpers wrap standard methods in a `try-catch` block, allowing execution to continue even when errors arise.
 
-> This DTS setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Features
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+- Prevents entire operations from failing due to individual errors.
+- Safe alternatives to common array methods.
+- `-with-errors` variants for the common array methods that return both results and error reports.
 
-## Commands
+## Installation
 
-DTS scaffolds your new library inside `/src`, and also sets up a [Vite-based](https://vitejs.dev) playground for it inside `/example`.
-
-The recommended workflow is to run DTS in one terminal:
-
-```bash
-npm start # or yarn start
+```sh
+npm install @future-widget-lab/safe-ops
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## Usage
 
-Then run the example inside another:
+### `safeEvery`
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+Use this helper to determine whether all the members of an array satisfy the specified test, even if an error occurs in some iterations.
+
+```typescript
+import { safeEvery } from '@future-widget-lab/safe-ops';
+
+const numbers = [1, 2, 3, 4, 5];
+const allEven = safeEvery(numbers, (num) => {
+	if (num === 3) {
+		throw new Error('Unexpected number!');
+	}
+
+	return num % 2 === 0;
+});
+
+console.log(allEven); // false
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure DTS is running in watch mode like we recommend above. 
+### `safeFilter`
 
-To do a one-off build, use `npm run build` or `yarn build`.
+Use this helper to return the elements of an array that meet the condition specified in a callback function, even if some callbacks throw errors.
 
-To run tests, use `npm test` or `yarn test`.
+```typescript
+import { safeFilter } from '@future-widget-lab/safe-ops';
 
-## Configuration
+const numbers = [1, 2, 3, 4, 5];
+const filtered = safeFilter(numbers, (num) => {
+	if (num === 3) {
+		throw new Error('Error processing!');
+	}
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+	return num % 2 === 0;
+});
 
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  index.test.tsx  # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+console.log(filtered); // [2, 4]
 ```
 
-#### React Testing Library
+### `safeFind`
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+Use this helper to return the first element in the array where the predicate is true, even if an error occurs.
 
-### Rollup
+```typescript
+import { safeFind } from '@future-widget-lab/safe-ops';
 
-DTS uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+const numbers = [1, 2, 3, 4, 5];
+const found = safeFind(numbers, (num) => {
+	if (num === 2) {
+		throw new Error('Failure!');
+	}
 
-### TypeScript
+	return num > 3;
+});
 
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `dts` [optimizations docs](https://github.com/weiran-zsd/dts-cli#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+console.log(found); // 4
 ```
 
-You can also choose to install and use [invariant](https://github.com/weiran-zsd/dts-cli#invariant) and [warning](https://github.com/weiran-zsd/dts-cli#warning) functions.
+### `safeFindIndex`
 
-## Module Formats
+Use this helper to return the index of the first element where the predicate is true, even if some iterations fail.
 
-CJS, ESModules, and UMD module formats are supported.
+```typescript
+import { safeFindIndex } from '@future-widget-lab/safe-ops';
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+const numbers = [1, 2, 3, 4, 5];
+const index = safeFindIndex(numbers, (num) => {
+	if (num === 2) {
+		throw new Error('Error here!');
+	}
 
-## Deploying the Example Playground
+	return num > 3;
+});
 
-The Playground is just a simple [Vite](https://vitejs.dev) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+console.log(index); // 3
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+### `safeForEach`
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+Use this helper to execute a function for each element in an array without stopping on errors.
+
+```typescript
+import { safeForEach } from '@future-widget-lab/safe-ops';
+
+const numbers = [1, 2, 3, 4, 5];
+safeForEach(numbers, (num) => {
+	if (num === 3) {
+		throw new Error('Processing failed!');
+	}
+
+	console.log(num);
+});
+
+// 1, 2, 4, 5 (skips 3 due to error but continues)
 ```
 
-## Named Exports
+### `safeMap`
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+Use this helper to transform an array into a new array while handling errors gracefully.
 
-## Including Styles
+```typescript
+import { safeMap } from '@future-widget-lab/safe-ops';
 
-There are many ways to ship styles, including with CSS-in-JS. DTS has no opinion on this, configure how you like.
+const numbers = [1, 2, 3, 4, 5];
+const mapped = safeMap(numbers, (num) => {
+	if (num === 4) {
+		throw new Error('Error transforming!');
+	}
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+	return num * 2;
+});
 
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with DTS within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
+console.log(mapped); // [2, 4, 6, 10]
 ```
 
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/formium/tsdx/issues/64)
+### `safeReduce`
+
+Use this helper to accumulate a result from an array, ensuring errors don't interrupt execution.
+
+```typescript
+import { safeReduce } from '@future-widget-lab/safe-ops';
+
+const numbers = [1, 2, 3, 4, 5];
+const sum = safeReduce(
+	numbers,
+	(acc, num) => {
+		if (num === 3) {
+			throw new Error('Summation error!');
+		}
+
+		return acc + num;
+	},
+	0
+);
+
+console.log(sum); // 12
+```
+
+### `safeSome`
+
+Use this helper to determine whether at least one element in the array satisfies the specified test, even if an error occurs.
+
+```typescript
+import { safeSome } from '@future-widget-lab/safe-ops';
+
+const numbers = [1, 2, 3, 4, 5];
+const hasEven = safeSome(numbers, (num) => {
+	if (num === 3) {
+		throw new Error('Failure!');
+	}
+
+	return num % 2 === 0;
+});
+
+console.log(hasEven); // true
+```
+
+## `-with-errors` Variants
+
+The `-with-errors` variants return both results and an `errors` array containing details of failed items.
+
+```typescript
+import { safeMapWithErrors } from '@future-widget-lab/safe-ops';
+
+const numbers = [1, 2, 3, 4, 5];
+const { result, errors } = safeMapWithErrors(numbers, (num) => {
+	if (num === 4) {
+		throw new Error('Error mapping!');
+	}
+
+	return num * 2;
+});
+
+console.log(result); // [2, 4, 6, 10]
+console.log(errors); // [{ error: [Error: Error mapping!], item: 4, index: 3 }]
+```
+
+## Important Note
+
+`safeMap` (and similar array helpers) operate synchronously and do not handle asynchronous transformations. If you pass an async function, the result will be an array of unresolved promises, just like with Array.prototype.map.
+
+For asynchronous cases, consider using `Promise.all`, `p-map`, or manually handling errors within your async function.
+
+## License
+
+MIT
