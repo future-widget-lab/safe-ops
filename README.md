@@ -48,6 +48,16 @@ if (output.ok) {
 }
 ```
 
+### `safeJsonParse`
+
+Use this helper to safely parse a possibly faulty JSON object.
+
+```typescript
+safeJsonParse('{"valid": true}', {}); // { "valid": true }
+
+safeJsonParse('invalid json', { userId: 1 }); // {"userId": 1}
+```
+
 ### `safeEvery`
 
 Use this helper to determine whether all the members of an array satisfy the specified test, even if an error occurs in some iterations.
