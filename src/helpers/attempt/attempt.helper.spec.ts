@@ -1,6 +1,6 @@
 import { attempt } from './attempt.helper';
 
-describe('Unit | Helper | safeguard', () => {
+describe('Unit | Helper | attempt', () => {
 	it.each([
 		{
 			input: () => {
