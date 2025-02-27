@@ -67,6 +67,7 @@
     "@tsconfig/recommended": "^1.0.8",
     "@tsconfig/vite-react": "^3.4.0",
     "@types/react": "^19.0.10",
+    "@types/jest": "^29.5.14",
     "@types/react-dom": "^19.0.4",
     "dts-cli": "^2.0.5",
     "husky": "^9.1.7",
