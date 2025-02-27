@@ -16,6 +16,20 @@ npm install @future-widget-lab/safe-ops
 
 ## Usage
 
+### `safeguard`
+
+Use this helper to safeguard against falsey values
+
+```typescript
+import { safeguard } from '@future-widget-lab/safe-ops';
+
+const values = [0, 1, '', 'hello', null, undefined, false, [], {}];
+
+const truthy = values.filter(safeguard);
+
+console.log(truthy); // Output: [1, 'hello', [], {}]
+```
+
 ### `safeEvery`
 
 Use this helper to determine whether all the members of an array satisfy the specified test, even if an error occurs in some iterations.
