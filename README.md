@@ -30,6 +30,24 @@ const truthy = values.filter(safeguard);
 console.log(truthy); // Output: [1, 'hello', [], {}]
 ```
 
+### `attempt`
+
+Use this helper to safely executes a function and catch any errors that occur.
+
+```typescript
+import { attempt } from '@future-widget-lab/safe-ops';
+
+const riskyOperation = () => JSON.parse('invalid json');
+
+const output = attempt(riskyOperation);
+
+if (output.ok) {
+	console.log('Success:', output.result);
+} else {
+	console.error('Error occurred:', output.error);
+}
+```
+
 ### `safeEvery`
 
 Use this helper to determine whether all the members of an array satisfy the specified test, even if an error occurs in some iterations.
