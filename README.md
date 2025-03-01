@@ -42,9 +42,9 @@ const riskyOperation = () => JSON.parse('invalid json');
 const output = attempt(riskyOperation);
 
 if (output.ok) {
-	console.log('Success:', output.result);
+  console.log('Success:', output.result);
 } else {
-	console.error('Error occurred:', output.error);
+  console.error('Error occurred:', output.error);
 }
 ```
 
@@ -67,11 +67,11 @@ import { safeEvery } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const allEven = safeEvery(numbers, (num) => {
-	if (num === 3) {
-		throw new Error('Unexpected number!');
-	}
+  if (num === 3) {
+    throw new Error('Unexpected number!');
+  }
 
-	return num % 2 === 0;
+  return num % 2 === 0;
 });
 
 console.log(allEven); // false
@@ -86,11 +86,11 @@ import { safeFilter } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const filtered = safeFilter(numbers, (num) => {
-	if (num === 3) {
-		throw new Error('Error processing!');
-	}
+  if (num === 3) {
+    throw new Error('Error processing!');
+  }
 
-	return num % 2 === 0;
+  return num % 2 === 0;
 });
 
 console.log(filtered); // [2, 4]
@@ -105,11 +105,11 @@ import { safeFind } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const found = safeFind(numbers, (num) => {
-	if (num === 2) {
-		throw new Error('Failure!');
-	}
+  if (num === 2) {
+    throw new Error('Failure!');
+  }
 
-	return num > 3;
+  return num > 3;
 });
 
 console.log(found); // 4
@@ -124,11 +124,11 @@ import { safeFindIndex } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const index = safeFindIndex(numbers, (num) => {
-	if (num === 2) {
-		throw new Error('Error here!');
-	}
+  if (num === 2) {
+    throw new Error('Error here!');
+  }
 
-	return num > 3;
+  return num > 3;
 });
 
 console.log(index); // 3
@@ -143,11 +143,11 @@ import { safeForEach } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 safeForEach(numbers, (num) => {
-	if (num === 3) {
-		throw new Error('Processing failed!');
-	}
+  if (num === 3) {
+    throw new Error('Processing failed!');
+  }
 
-	console.log(num);
+  console.log(num);
 });
 
 // 1, 2, 4, 5 (skips 3 due to error but continues)
@@ -162,11 +162,11 @@ import { safeMap } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const mapped = safeMap(numbers, (num) => {
-	if (num === 4) {
-		throw new Error('Error transforming!');
-	}
+  if (num === 4) {
+    throw new Error('Error transforming!');
+  }
 
-	return num * 2;
+  return num * 2;
 });
 
 console.log(mapped); // [2, 4, 6, 10]
@@ -181,15 +181,15 @@ import { safeReduce } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const sum = safeReduce(
-	numbers,
-	(acc, num) => {
-		if (num === 3) {
-			throw new Error('Summation error!');
-		}
+  numbers,
+  (acc, num) => {
+    if (num === 3) {
+      throw new Error('Summation error!');
+    }
 
-		return acc + num;
-	},
-	0
+    return acc + num;
+  },
+  0
 );
 
 console.log(sum); // 12
@@ -204,11 +204,11 @@ import { safeSome } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const hasEven = safeSome(numbers, (num) => {
-	if (num === 3) {
-		throw new Error('Failure!');
-	}
+  if (num === 3) {
+    throw new Error('Failure!');
+  }
 
-	return num % 2 === 0;
+  return num % 2 === 0;
 });
 
 console.log(hasEven); // true
@@ -223,11 +223,11 @@ import { safeMapWithErrors } from '@future-widget-lab/safe-ops';
 
 const numbers = [1, 2, 3, 4, 5];
 const { result, errors } = safeMapWithErrors(numbers, (num) => {
-	if (num === 4) {
-		throw new Error('Error mapping!');
-	}
+  if (num === 4) {
+    throw new Error('Error mapping!');
+  }
 
-	return num * 2;
+  return num * 2;
 });
 
 console.log(result); // [2, 4, 6, 10]
